@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from huggingface_hub import hf_hub_download
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -6,9 +7,15 @@ import os
 
 app = Flask(__name__)
 
-# Load your model (choose VGG or CNN)
-MODEL_PATH = "model_vgg.h5"   # or "model_cnn.h5"
-model = load_model(MODEL_PATH)
+# Download model from Hugging Face repo
+model_path = hf_hub_download(
+    repo_id="Dee-pak-13/vgg_mode",  # replace with your repo name
+    filename="model_vgg.h5"
+)
+print(f"Model downloaded to: {model_path}")
+
+model = load_model(model_path)
+print("Model loaded successfully.")
 
 # Prediction route
 @app.route("/predict", methods=["POST"])
